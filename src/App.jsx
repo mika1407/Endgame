@@ -9,7 +9,9 @@ export default function AssemblyEndgame() {
 
     // Derived values
     const wrongGuessCount = guessedLetters.filter(letter => !currentWord.includes(letter)).length
-    console.log(wrongGuessCount)
+    const isGameWon = currentWord.split("").every(letter => guessedLetters.includes(letter))
+    const isGameLost = wrongGuessCount >= languages.length - 1
+    const isGameOver = isGameWon || isGameLost
 
     // Static values
     const alphabet = "abcdefghijklmnopqrstuvwxyz"
@@ -20,13 +22,15 @@ export default function AssemblyEndgame() {
           [...prevLetters, letter])
     }
 
-     const languageElements = languages.map(lang => {
+     const languageElements = languages.map((lang, index) => {
+      const isLanguageLost = index < wrongGuessCount
         const styles = {
             backgroundColor: lang.backgroundColor,
             color: lang.color
         }
+        const className = clsx("chip", isLanguageLost && "lost")
         return (
-            <span className="chip" style={styles} key={lang.name}>
+            <span className={className} style={styles} key={lang.name}>
                 {lang.name}
             </span>
         )
@@ -57,15 +61,35 @@ export default function AssemblyEndgame() {
       )
     })
 
+    const gameStatusClass = clsx("game-status", {
+        won: isGameWon,
+        lost: isGameLost
+    })
+
     return (
         <main>
             <header>
                 <h1>Assembly: Endgame</h1>
                 <p>Guess the word within 8 attempts to keep the programming world safe from Assembly!</p>
             </header>
-            <section className="game-status">
-                <h2>You win!</h2>
-                <p>Well done! 🎉</p>
+            
+            <section className={gameStatusClass}>
+                {isGameOver ? (
+                    isGameWon ? (
+                        <>
+                            <h2>You win!</h2>
+                            <p>Well done! 🎉</p>
+                        </>
+                    ) : (
+                        <>
+                            <h2>Game over!</h2>
+                            <p>You lose! Better start learning Assembly 😭</p>
+                        </>
+                    )
+                ) : (
+                        null
+                    )
+                }
             </section>
 
             <section className="language-chips">
@@ -78,7 +102,7 @@ export default function AssemblyEndgame() {
             <section className="keyboard">
                 {keyboardElements}
             </section>
-             <button className="new-game">New Game</button>
+             {isGameOver && <button className="new-game">New Game</button>}
         </main>
     )
 }
