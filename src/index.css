@@ -9,8 +9,12 @@ body {
     color: #D9D9D9;
     padding: 20px;
     height: 100vh;
+}
+
+main {
     display: flex;
-    justify-content: center;
+    flex-direction: column ;
+    align-items: center;
 }
 
 header {
@@ -27,8 +31,8 @@ header p {
     font-size: 0.875rem;
     max-width: 350px;
     color: #8E8E8E;
-        margin-left: auto;
-    margin-right: auto;
+    /* margin-left: auto;
+    margin-right: auto; */
 }
 
 section.game-status {
@@ -36,6 +40,9 @@ section.game-status {
     flex-direction: column;
     align-items: center;
     color: #F9F4DA;
+    width: 100%;
+    max-width: 350px;
+    min-height: 60px;
     border-radius: 4px;
     margin-block: 30px;
 }
