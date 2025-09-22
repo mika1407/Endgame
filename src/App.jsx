@@ -2,6 +2,7 @@ import { useState } from "react"
 import { clsx } from "clsx"
 import { languages } from "./components/languages"
 import { getFarewellText, getRandomWord } from "./components/utils"
+import ConfettiExplosion from 'react-confetti-explosion';
 
 export default function AssemblyEndgame() {
     // State values
@@ -40,11 +41,17 @@ export default function AssemblyEndgame() {
         )
     })
 
-    const letterElements = currentWord.split('').map((letter, index) => (
-        <span key={index}>
-           {guessedLetters.includes(letter) ? letter.toUpperCase() : ""}
+    const letterElements = currentWord.split('').map((letter, index) => {
+        const shouldRevealLetter = isGameLost || guessedLetters.includes(letter)
+        const letterClassName = clsx(
+            isGameLost && !guessedLetters.includes(letter) && "missed-letter"
+        )
+        return (
+        <span key={index} className={letterClassName}>
+           {shouldRevealLetter ? letter.toUpperCase() : ""}
         </span>
-    ))
+        )
+    })
 
     const keyboardElements = alphabet.split('').map(letter => {
         const isGuessed = guessedLetters.includes(letter)
@@ -108,6 +115,15 @@ export default function AssemblyEndgame() {
 
     return (
         <main>
+            {
+                isGameWon && 
+                    <ConfettiExplosion
+                        force={0.8}
+                        duration={3000}
+                        particleCount={250}
+                        width={1600}                    
+                    />
+            }
             <header>
                 <h1>Assembly: Endgame</h1>
                 <p>Guess the word within 8 attempts to keep the programming world safe from Assembly!</p>
